@@ -1,0 +1,13 @@
+.conditional-button {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+.conditional-button-icon {
+    padding: 5px;
+    margin-left: 4px;
+    margin-right: 4px;
+    color: white;
+    border-radius: 6px;
+    background-color: gray;
+}

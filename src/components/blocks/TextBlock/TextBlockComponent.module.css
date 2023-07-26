@@ -1,0 +1,13 @@
+
+
+.text-block-editor textarea{
+    overflow: hidden;
+    resize: none;
+    box-sizing: border-box;
+    padding: 5px;
+    min-height: 50px;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 16px;
+}

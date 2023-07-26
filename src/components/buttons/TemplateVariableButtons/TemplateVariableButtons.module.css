@@ -1,0 +1,25 @@
+.variable-buttons-bar {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.variable-button {
+    cursor: pointer;
+    color: #333;
+    font-size: large;
+    margin: 5px;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: #8aff8a;
+}
+
+@media screen and (max-width: 768px) {
+    .variable-button {
+        font-size: 16px;
+    }
+    .variable-buttons-bar span{
+        width: 100%;
+    }
+}

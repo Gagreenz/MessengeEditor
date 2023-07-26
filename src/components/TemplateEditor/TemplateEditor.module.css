@@ -1,0 +1,35 @@
+.template-editor-toolbar {
+    background-color: #333;
+    color: #fff;
+    padding: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.template-editor-container {
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 10px;
+    background-color: rgb(207, 204, 200);
+}
+.template-editor-btn {
+    cursor: pointer;
+    font-size: large;
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+.template-editor-bottom{
+    display: flex;
+}
+
+@media screen and (max-width: 768px) {
+    .template-editor-toolbar {
+        flex-direction: column;
+    }
+}
