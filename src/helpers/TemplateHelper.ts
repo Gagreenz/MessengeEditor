@@ -24,7 +24,7 @@ class TemplateHelper {
           const newText = prevTextBlock.text + nextTextBlock.text;
           // Заменяем предыдущий блок с объединенным текстом
           result[index - 1] = new TextBlock(newText);
-          template.templateBlocks.splice(index + 1);
+          template.templateBlocks.splice(index + 1,1);
         } 
         return result;
       } else if (block instanceof ConditionalBlock) {
@@ -139,11 +139,10 @@ class TemplateHelper {
     let result = '';
     for (const block of blocks) {
       if (block instanceof TextBlock) {
-        result += this.replaceVariablesInString(block.text,variableValues) + ' ';
+        result += this.replaceVariablesInString(block.text,variableValues);
       } else if (block instanceof ConditionalBlock) {
-        const variableName = block.if.text.replace(/{|}/g, '');
-        const variableValue = variableValues[variableName];
-        if (variableValue!= undefined && variableValue !== '') {
+        const ifResult = this.replaceVariablesInString(block.if.text, variableValues)
+        if (ifResult !== '') {
           result += TemplateHelper.concatenateTextBlocks(block.thenBlock.templateBlocks, variableValues);
         } else {
           result += TemplateHelper.concatenateTextBlocks(block.elseBlock.templateBlocks, variableValues);
@@ -155,7 +154,11 @@ class TemplateHelper {
 
   private static replaceVariablesInString(str: string, variableValues: { [key: string]: string }): string {
     const regex = new RegExp(`{(${Object.keys(variableValues).join('|')})}`, 'g');
-    return str.replace(regex, (match, key) => variableValues[key] || match);
+
+    return str.replace(regex, (match, key) => {
+      const value = variableValues[key];
+      return value !== undefined ? value : match;
+    });
   }
 
   static fromJson(json: string): Template {

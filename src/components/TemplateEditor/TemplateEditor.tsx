@@ -39,7 +39,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({arrVarNames, template, c
         action: InsertAction,
         obj: any 
       ) => {
-        await updateEditedTemplate;
+        await dispatch(saveTrigger());
         setTimeout(() => {
           dispatch(action(obj));
         }, 10);
