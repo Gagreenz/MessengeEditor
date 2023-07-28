@@ -8,7 +8,7 @@ describe('TemplateHelper - concatenateTextBlocks', () => {
     const textBlock1 = new TextBlock('Hello, world!');
 
     const result = TemplateHelper.concatenateTextBlocks([textBlock1], {});
-    expect(result).toBe('Hello, world! ');
+    expect(result).toBe('Hello, world!');
   });
 
   it('should replace variables in text blocks', () => {
@@ -16,7 +16,7 @@ describe('TemplateHelper - concatenateTextBlocks', () => {
     const variableValues = { name: 'John' };
 
     const result = TemplateHelper.concatenateTextBlocks([textBlock1], variableValues);
-    expect(result).toBe('My name is John. ');
+    expect(result).toBe('My name is John.');
   });
 
   it('should`t replace variables in text blocks', () => {
@@ -24,12 +24,12 @@ describe('TemplateHelper - concatenateTextBlocks', () => {
     const variableValues = { name: 'John' };
 
     const result = TemplateHelper.concatenateTextBlocks([textBlock1], variableValues);
-    expect(result).toBe('My name is {notExistVar}. ');
+    expect(result).toBe('My name is {notExistVar}.');
   });
 
   it('should handle conditional blocks with not empty condition', () => {
     const textBlock1 = new TextBlock('Variable should be');
-    const textBlock2 = new TextBlock('|CORRECT|');
+    const textBlock2 = new TextBlock(' |CORRECT| ');
     const textBlock3 = new TextBlock('|FATAL|');
     const textBlock4 = new TextBlock('conditional block.');
     const conditionalBlock = new ConditionalBlock(
@@ -43,13 +43,13 @@ describe('TemplateHelper - concatenateTextBlocks', () => {
       [textBlock1, conditionalBlock, textBlock4],
       variableValues
     );
-    expect(result).toBe('Variable should be |CORRECT| conditional block. ');
+    expect(result).toBe('Variable should be |CORRECT| conditional block.');
   });
 
   it('should handle conditional blocks with empty condition', () => {
     const textBlock1 = new TextBlock('Variable should be');
     const textBlock2 = new TextBlock('|FATAL|');
-    const textBlock3 = new TextBlock('|CORRECT|');
+    const textBlock3 = new TextBlock(' |CORRECT| ');
     const textBlock4 = new TextBlock('conditional block.');
     const conditionalBlock = new ConditionalBlock(
       new TextBlock('{condition}'),
@@ -62,7 +62,7 @@ describe('TemplateHelper - concatenateTextBlocks', () => {
       [textBlock1, conditionalBlock, textBlock4],
       variableValues
     );
-    expect(result).toBe('Variable should be |CORRECT| conditional block. ');
+    expect(result).toBe('Variable should be |CORRECT| conditional block.');
   });
 
   it('should handle depth conditional blocks condition', () => {
@@ -86,7 +86,7 @@ describe('TemplateHelper - concatenateTextBlocks', () => {
       [textBlock1, conditionalBlockLevel1, textBlock4],
       variableValues
     );
-    expect(result).toBe('Start condition block { Start condition block { |CORRECT| } end. } end. ');
+    expect(result).toBe('Start condition block {Start condition block {|CORRECT|} end.} end.');
   });
 
 });
