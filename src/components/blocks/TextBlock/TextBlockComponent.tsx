@@ -38,7 +38,6 @@ const TextBlockComponent: React.FC<TextBlockComponentProps> = ({blockId, blockTe
 
         const textarea = textareaRef.current;
         if (!textarea) return;
-
         dispatch(setCursorPosition(textarea.selectionStart));
         handleBlockInteraction(blockId);
     };
@@ -60,10 +59,11 @@ const TextBlockComponent: React.FC<TextBlockComponentProps> = ({blockId, blockTe
 
     React.useLayoutEffect(() => {
         adjustSize();
-        if(blockId == activeBlockId) {
-            const textarea = textareaRef.current;
-            if (!textarea) return;
-            
+
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+        
+        if(blockId == activeBlockId && textarea.selectionStart != cursorPosition) {
             textarea.selectionStart = cursorPosition;
             textarea.selectionEnd = cursorPosition;
             textarea.focus();
