@@ -23,9 +23,16 @@ interface DeleteBlockTemplatePayload {
   id: string;
 }
 
+interface CursorInfo {
+  blockId: string;
+  position: number;
+}
+
 const initialState = {
   eventTriggered: false,
   template: new Template([new TextBlock('TEST')]),
+  activeId: '',
+  cursorPosition: 0,
 };
 
 const templateSlice = createSlice({
@@ -34,6 +41,12 @@ const templateSlice = createSlice({
   reducers: {
     setTemplate: (state, action: PayloadAction<Template>) => {
       state.template = action.payload;
+    },
+    setActiveId: (state, action: PayloadAction<string>) => {
+      state.activeId = action.payload;
+    },
+    setCursorPosition: (state, action: PayloadAction<number>) => {
+      state.cursorPosition = action.payload;
     },
     insertBlock: (state, action: PayloadAction<InsertBlockTemplatePayload>) => {
       state.template = new Template(TemplateHelper.insertBlockIntoBlock(
@@ -63,5 +76,5 @@ const templateSlice = createSlice({
   },
 });
 
-export const { setTemplate, insertBlock, insertText, deleteBlock, updateTemplate, saveTrigger } = templateSlice.actions;
+export const { setTemplate, insertBlock, insertText, deleteBlock, updateTemplate, saveTrigger,setActiveId,setCursorPosition } = templateSlice.actions;
 export default templateSlice.reducer;

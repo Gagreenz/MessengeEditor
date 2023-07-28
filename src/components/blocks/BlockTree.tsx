@@ -1,21 +1,22 @@
 import React from 'react';
 import BaseTemplateBlock from '../../models/BaseTemplateBlock';
 import BlockBase from './BlockBase';
+import Template from '../../models/Template';
 
 interface BlockTreeProps {
-    blocks: BaseTemplateBlock[];
-    handleBlockInteraction: (lastBlockId: string, cursorPosition: number) => void;
+    template: Template;
+    handleBlockInteraction: (lastBlockId: string) => void;
 }
 
-const BlockTree: React.FC<BlockTreeProps> = ({blocks, handleBlockInteraction}) => {
+const BlockTree: React.FC<BlockTreeProps> = ({ template, handleBlockInteraction}) => {
     return (
         <div>
-            {blocks.map((block) => {
+            {template.templateBlocks.map((block) => {
                 return (
                     <BlockBase
-                      key={'blockbase ' + block.id.substring(0,6)}
-                      block={block}
-                      handleBlockInteraction = {handleBlockInteraction}
+                        key={'blockbase ' + block.id.substring(0,6)}
+                        block={block}
+                        handleBlockInteraction = {handleBlockInteraction}
                     />
                   );
             })}

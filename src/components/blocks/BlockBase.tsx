@@ -21,7 +21,8 @@ const createBlockEditor = ({block, handleBlockInteraction}: BlockEditorProps): J
       return (
         <TextBlockEditor
           key={block.id}
-          block={block as TextBlock}
+          blockId={block.id}
+          blockText={(block as TextBlock).text}
           handleBlockInteraction={handleBlockInteraction}
         />
       );
@@ -32,10 +33,10 @@ const createBlockEditor = ({block, handleBlockInteraction}: BlockEditorProps): J
 
 interface BlockEditorProps {
     block: BaseTemplateBlock;
-    handleBlockInteraction: (lastBlockId: string, cursorPosition: number) => void;
+    handleBlockInteraction: (lastBlockId: string) => void;
 }
 
-const BlockBase: React.FC<BlockEditorProps> = ({block, handleBlockInteraction}) => {
+const BlockBase: React.FC<BlockEditorProps> = ({ block, handleBlockInteraction}) => {
     const editorComponent = createBlockEditor({block, handleBlockInteraction});
 
     return editorComponent;

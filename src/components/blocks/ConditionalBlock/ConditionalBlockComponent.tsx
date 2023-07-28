@@ -10,10 +10,10 @@ import { useDispatch } from "react-redux";
 
 interface ConditionalBlockProps {
     block: ConditionalBlock;
-    handleBlockInteraction: (lastBlockId: string, cursorPosition: number) => void;
+    handleBlockInteraction: (lastBlockId: string) => void;
 }
 
-const ConditionalBlockComponent: React.FC<ConditionalBlockProps> = ({ block, handleBlockInteraction}) => {
+const ConditionalBlockComponent: React.FC<ConditionalBlockProps> = ({block, handleBlockInteraction}) => {
     const dispatch = useDispatch();
 
     const handleButtonClick = () => {
@@ -47,7 +47,7 @@ const ConditionalBlockComponent: React.FC<ConditionalBlockProps> = ({ block, han
           <span className={styles["conditional-block__label"]}>IF</span>
           <div className={styles["conditional-block__item"]}>
             <BlockBase
-              key={'blockbase ' + block.id.substring(0, 8)}
+              key={'blockbase ' + block.id.substring(0, 6)}
               block={block.if}
               handleBlockInteraction={handleBlockInteraction}
             />

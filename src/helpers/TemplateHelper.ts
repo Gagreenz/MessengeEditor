@@ -85,11 +85,11 @@ class TemplateHelper {
         // Обновляем текст текущего блока, вставляя `text` в указанную позицию `cursorPosition`.
         const updatedText = block.text.slice(0, cursorPosition) + text + block.text.slice(cursorPosition);
         // Создаем и возвращаем новый экземпляр `TextBlock` с обновленным текстом.
-        return new TextBlock(updatedText);
+        return new TextBlock(updatedText,block.id);
       } else if (block instanceof ConditionalBlock) {
         // Обновляем условный блок `if`, если его идентификатор совпадает с указанным `id`.
         const updatedIfBlock = block.if.id === id
-          ? new TextBlock(block.if.text.slice(0, cursorPosition) + text + block.if.text.slice(cursorPosition))
+          ? new TextBlock(block.if.text.slice(0, cursorPosition) + text + block.if.text.slice(cursorPosition), id)
           : block.if;
         // Рекурсивно вызываем этот же метод для блоков `thenBlock` и `elseBlock` и обновляем их содержимое.
         const updatedThenBlock = this.insertTextIntoBlock(block.thenBlock, id, cursorPosition, text);
@@ -200,7 +200,7 @@ class TemplateHelper {
     const secondHalf = textblock.text.substring(cursorPoint);
 
     return (
-      [new TextBlock(firstHalf) ,new TextBlock(secondHalf)]
+      [new TextBlock(firstHalf,textblock.id) ,new TextBlock(secondHalf)]
     )
   }
 

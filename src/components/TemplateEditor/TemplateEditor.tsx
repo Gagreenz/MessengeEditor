@@ -9,7 +9,7 @@ import TemplateViewer from '../TemplateViewer/TemplateViewer';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { insertBlock, insertText, saveTrigger, setTemplate } from '../../redux/slices/templateSlice';
+import { insertBlock, insertText, saveTrigger, setActiveId, setCursorPosition, setTemplate } from '../../redux/slices/templateSlice';
 type InsertAction = typeof insertBlock | typeof insertText;
 
 interface TemplateEditorProps {
@@ -20,7 +20,6 @@ interface TemplateEditorProps {
 
 const TemplateEditor: React.FC<TemplateEditorProps> = ({arrVarNames, template, callbackSave}) => {
     const [idLastElement, setIdLastElement] = React.useState<string>('');
-    const [cursorPosition, setCursorPosition] = React.useState<number>(0);
     const [isOpen, setIsOpen] = React.useState(false);
 
     const dispatch = useDispatch();
@@ -30,10 +29,11 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({arrVarNames, template, c
         setIsOpen(!isOpen);
     };
 
-    const setDefault = (): void => {
-        setIdLastElement(editedTemplate?.templateBlocks[0]?.id || '');
-        setCursorPosition(0);
-    };
+    const getCursorPosition = (): number => {
+        const textarea = document.getElementById('textarea'+idLastElement) as HTMLTextAreaElement;
+        const curPos = textarea.selectionStart;
+        return curPos;
+    }
 
     const addBlockWithDispatch = async (
         action: InsertAction,
@@ -43,7 +43,6 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({arrVarNames, template, c
         setTimeout(() => {
           dispatch(action(obj));
         }, 10);
-        setDefault();
     };
      
     const updateEditedTemplate = async (): Promise<void> =>{
@@ -51,18 +50,23 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({arrVarNames, template, c
     }
 
     const addConditionBlock = () => {
+        const cursorPosition = getCursorPosition();
         const obj = { id: idLastElement, cursorPosition: cursorPosition };
+
+        dispatch(setCursorPosition(cursorPosition));
         addBlockWithDispatch(insertBlock, obj);
     };
       
     const addVariable = async (variable: string): Promise<void> => {
+        const cursorPosition = getCursorPosition()
         const obj = { id: idLastElement, cursorPosition: cursorPosition, text: variable };
+
+        dispatch(setCursorPosition(cursorPosition + variable.length));
         addBlockWithDispatch(insertText, obj);
     };
       
-    const handleBlockInteraction = (lastBlockId: string, cursorPosition: number) => {
+    const handleBlockInteraction = (lastBlockId: string) => {
         setIdLastElement(lastBlockId);
-        setCursorPosition(cursorPosition);
     };
 
     const handleButtonClick = async () => {
@@ -97,7 +101,7 @@ const TemplateEditor: React.FC<TemplateEditorProps> = ({arrVarNames, template, c
                     </div>
                     <div className={styles['template-editor-container']}>
                         <BlockTree
-                            blocks={editedTemplate?.templateBlocks || []}
+                            template={editedTemplate || new Template([])}
                             handleBlockInteraction={handleBlockInteraction}
                         />
                         <div className={styles['template-editor-bottom']}>

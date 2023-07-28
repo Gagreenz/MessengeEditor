@@ -1,26 +1,29 @@
 import React from "react";
 import styles from "./TextBlockComponent.module.css";
 
-import TextBlock from "../../../models/TextBlock";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux";
-import { updateTemplate } from "../../../redux/slices/templateSlice";
+import { setActiveId, setCursorPosition, updateTemplate } from "../../../redux/slices/templateSlice";
 
 interface TextBlockComponentProps {
-    block: TextBlock;
-    handleBlockInteraction: (lastBlockId: string, cursorPosition: number) => void;
+    blockId: string;
+    blockText: string;
+    handleBlockInteraction: (lastBlockId: string) => void;
 }
 
-const TextBlockComponent: React.FC<TextBlockComponentProps> = ({block, handleBlockInteraction}) => {
-    const [text, setText] = React.useState(block.text);
+const TextBlockComponent: React.FC<TextBlockComponentProps> = ({blockId, blockText, handleBlockInteraction}) => {
+    const [text, setText] = React.useState(blockText);
     const textareaRef = React.useRef(null);
-    
+
+    const cursorPosition = useSelector((state: RootState) => state.template.cursorPosition);
     const eventTriggered = useSelector((state: RootState) => state.template.eventTriggered);
+    const activeBlockId = useSelector((state: RootState) => state.template.activeId);
+
     const dispatch = useDispatch();
     
     React.useEffect(() => {
         if (eventTriggered) {
-            let payload = { id: block.id, text: text };
+            let payload = { id: blockId, text: text };
             dispatch(updateTemplate(payload));
         }
     }, [eventTriggered]);
@@ -29,21 +32,21 @@ const TextBlockComponent: React.FC<TextBlockComponentProps> = ({block, handleBlo
         setText(event.target.value);
         handleInputClick();
     };
-
+    
     const handleInputClick = () => {
-        var id: string;
-        var cursorPosition: number;
+        dispatch(setActiveId(blockId));
 
-        id = block.id;
-        cursorPosition = textareaRef.current.selectionStart;
-
-        handleBlockInteraction(id,cursorPosition);
-    };
-
-    React.useEffect(() => {
         const textarea = textareaRef.current;
         if (!textarea) return;
-    
+
+        dispatch(setCursorPosition(textarea.selectionStart));
+        handleBlockInteraction(blockId);
+    };
+
+    const adjustSize = () => {
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+
         const adjustTextareaHeight = () => {
           textarea.style.height = "auto";
           textarea.style.height = textarea.scrollHeight + "px";
@@ -53,7 +56,24 @@ const TextBlockComponent: React.FC<TextBlockComponentProps> = ({block, handleBlo
         return () => {
           textarea.removeEventListener("input", adjustTextareaHeight);
         };
-      }, []);
+    }
+
+    React.useLayoutEffect(() => {
+        adjustSize();
+        if(blockId == activeBlockId) {
+            const textarea = textareaRef.current;
+            if (!textarea) return;
+            
+            textarea.selectionStart = cursorPosition;
+            textarea.selectionEnd = cursorPosition;
+            textarea.focus();
+        }
+        
+    })
+
+    React.useEffect(() => {
+        setText(blockText);
+    }, [blockText]);
 
     return (
         <div className={styles["text-block-editor"]}>
@@ -62,7 +82,8 @@ const TextBlockComponent: React.FC<TextBlockComponentProps> = ({block, handleBlo
                 onChange={handleTextChange}
                 onClick={handleInputClick}
                 ref={textareaRef}
-            ></textarea>
+                id={'textarea'+blockId}
+            />
         </div>
     );
 };
